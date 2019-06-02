@@ -1,0 +1,47 @@
+'''
+'''  Too complex... I think not.
+'''
+'''  PIC: 16f15355
+'''  Compiler: GCB
+'''  IDE: GCB@SYN
+'''
+'''
+'''@author   EvanV
+'''@licence  GPL
+'''@version  1.0
+'''@date     04.12.2019
+
+
+
+    'Chip Settings.
+    #chip 16f15355,32
+    #Config  MCLRE_ON    'These configs = MCLR pin function enablesd, External oscillator not enabled and clockout function is disables ( enable I/O port).
+
+    asm showdebug  Too complex...
+
+     table gray_code
+        0
+        0
+        0
+        1
+        1
+        1
+        3
+        3
+        3
+        3
+        7
+        7
+        7
+        15
+        15
+        15
+     end table
+
+    dim mybytevariable as byte
+    do
+        wait 5 ms
+        readtable gray_code, mybytevariable, PORTA
+
+    loop
+
