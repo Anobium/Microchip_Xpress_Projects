@@ -1,5 +1,7 @@
 # Error Message
-A set of projects that can be used with Microchip Xpress
+
+ASM is case sensitive as it is not possible to set the case sensitivity switch (as wqe can with MPASMX or MPLAB-X)
+
 
 
 image::ErrorCapture.JPG[Error Message Screen]
