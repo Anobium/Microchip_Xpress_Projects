@@ -18,9 +18,9 @@
 
 ;Set aside memory locations for variables
 DELAYTEMP	EQU	112
-DELAYTEMP2	EQU	113
-SYSWAITTEMPMS	EQU	114
-SYSWAITTEMPMS_H	EQU	115
+SYSTEMP1	EQU	32
+SYSWAITTEMPUS	EQU	117
+SYSWAITTEMPUS_H	EQU	118
 
 ;********************************************************************************
 
@@ -41,37 +41,26 @@ BASPROGRAMSTART
 
 ;Start of the main program
 ;this will cannot compile... as the asm compiler ui cannot set case sensitivity
+	bcf	TRISA,1
 SysDoLoop_S1
-	movlw	100
-	movwf	SysWaitTempMS
-	clrf	SysWaitTempMS_H
-	call	Delay_MS
+	movlw	2
+	movwf	DELAYTEMP
+DelayUS1
+	decfsz	DELAYTEMP,F
+	goto	DelayUS1
+	nop
+	clrf	SysTemp1
+	btfsc	PORTA,1
+	incf	SysTemp1,F
+	comf	SysTemp1,F
+	bcf	LATA,1
+	btfsc	SysTemp1,0
+	bsf	LATA,1
 	goto	SysDoLoop_S1
 SysDoLoop_E1
 BASPROGRAMEND
 	sleep
 	goto	BASPROGRAMEND
-
-;********************************************************************************
-
-Delay_MS
-	incf	SysWaitTempMS_H, F
-DMS_START
-	movlw	14
-	movwf	DELAYTEMP2
-DMS_OUTER
-	movlw	189
-	movwf	DELAYTEMP
-DMS_INNER
-	decfsz	DELAYTEMP, F
-	goto	DMS_INNER
-	decfsz	DELAYTEMP2, F
-	goto	DMS_OUTER
-	decfsz	SysWaitTempMS, F
-	goto	DMS_START
-	decfsz	SysWaitTempMS_H, F
-	goto	DMS_START
-	return
 
 ;********************************************************************************
 
