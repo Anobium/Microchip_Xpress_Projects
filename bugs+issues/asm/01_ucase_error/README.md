@@ -2,4 +2,4 @@
 A set of projects that can be used with Microchip Xpress
 
 
-image::ErrorCapture.jpg[Error Message Screen]
+image::ErrorCapture.JPG[Error Message Screen]
