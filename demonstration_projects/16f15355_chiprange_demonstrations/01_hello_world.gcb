@@ -27,6 +27,8 @@
     ''-----------------------------------------
     ''
 
+    asm showdebug Debughere
+
     'Set the whole port as an output, we will use only one BIT
     dir PORTC out
 
@@ -35,9 +37,6 @@
 
     'Set one bit of the port ON.
     PORTC.0 = 1
-
-    Do Forever
-    Loop
 
     'End
     end

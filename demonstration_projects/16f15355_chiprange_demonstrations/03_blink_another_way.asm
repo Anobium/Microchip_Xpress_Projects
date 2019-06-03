@@ -42,6 +42,8 @@ BASPROGRAMSTART
 	call	INITSYS
 
 ;Start of the main program
+;debughere
+	nop
 	bcf	TRISC,0
 SysDoLoop_S1
 	movlw	232
@@ -49,6 +51,8 @@ SysDoLoop_S1
 	movlw	3
 	movwf	SysWaitTempMS_H
 	call	Delay_MS
+;debughere
+	nop
 	clrf	BITIN
 	btfsc	PORTC,0
 	incf	BITIN,F

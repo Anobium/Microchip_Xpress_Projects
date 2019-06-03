@@ -31,10 +31,17 @@
     ''-----------------------------------------
     ''
 
+    asm showdebug Debughere
+    nop
+
     dir PORTC.0 out
 
     do
         wait 1000 ms
+
+        asm showdebug Debughere
+        nop
+
         'An alternative Great Cow BASIC method.
         SetWith ( PORTC.0, FnNotBit (PORTC.0) )
 

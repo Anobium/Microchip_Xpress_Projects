@@ -35,9 +35,6 @@ BASPROGRAMSTART
 	clrf	TRISC
 	clrf	PORTC
 	bsf	LATC,0
-SysDoLoop_S1
-	goto	SysDoLoop_S1
-SysDoLoop_E1
 	goto	BASPROGRAMEND
 BASPROGRAMEND
 	sleep

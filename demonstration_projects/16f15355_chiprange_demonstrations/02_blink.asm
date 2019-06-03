@@ -19,6 +19,10 @@
 ;Set aside memory locations for variables
 DELAYTEMP	EQU	112
 DELAYTEMP2	EQU	113
+MYWORD	EQU	31
+MYWORD_E	EQU	34
+MYWORD_H	EQU	32
+MYWORD_U	EQU	33
 SYSTEMP1	EQU	32
 SYSWAITTEMPMS	EQU	114
 SYSWAITTEMPMS_H	EQU	115
@@ -41,6 +45,14 @@ BASPROGRAMSTART
 	call	INITSYS
 
 ;Start of the main program
+	movlw	52
+	movwf	MYWORD
+	movlw	18
+	movwf	MYWORD_H
+	clrf	MYWORD_U
+	clrf	MYWORD_E
+;debughere
+	nop
 	bcf	TRISC,0
 SysDoLoop_S1
 	movlw	232
@@ -48,6 +60,8 @@ SysDoLoop_S1
 	movlw	3
 	movwf	SysWaitTempMS_H
 	call	Delay_MS
+;debughere
+	nop
 	clrf	SysTemp1
 	btfsc	PORTC,0
 	incf	SysTemp1,F
