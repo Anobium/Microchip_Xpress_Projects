@@ -1,8 +1,14 @@
 # Error Message
 
+NOTE:  THIS IS A 10F200 project.  This represents the general case.
+
 This is probably... case sensitivity but I am not sure.
 
 In the source INC file config 1... is OSC_IntRC.... NOTE the case.
+
+
+		_OSC_IntRC           EQU  H'0FFF'; This is the only option. It is here for backward compatibility
+		_IntRC_OSC           EQU  H'0FFF'; This is the only option. It is here for backward compatibility
 
 So, unless the user gets the case 100% they will not be able to compile.
 
