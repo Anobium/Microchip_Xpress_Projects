@@ -5,21 +5,26 @@
 ;********************************************************************************
 
 ;Set up the assembler options (Chip type, clock source, other bits and pieces)
- LIST p=16F15355, r=DEC
-#include <P16F15355.inc>
+ LIST p=16F18446, r=DEC
+#include <P16F18446.inc>
  __CONFIG _CONFIG1, _CLKOUTEN_OFF & _RSTOSC_HFINT32 & _FEXTOSC_OFF
- __CONFIG _CONFIG2, _MCLRE_ON
+ __CONFIG _CONFIG2, _MCLRE_OFF
  __CONFIG _CONFIG3, _WDTE_OFF
- __CONFIG _CONFIG4, _LVP_OFF
+ __CONFIG _CONFIG4, _LVP_OFF & _WRTD_OFF
  __CONFIG _CONFIG5, _CP_OFF
 
 ;********************************************************************************
 
 ;Set aside memory locations for variables
-DELAYTEMP	EQU	112
-SYSTEMP1	EQU	32
-SYSWAITTEMPUS	EQU	117
-SYSWAITTEMPUS_H	EQU	118
+EEADR	EQU	32
+EEDATAVALUE	EQU	33
+SOMEVAR	EQU	34
+TABLELOC	EQU	35
+
+;********************************************************************************
+
+;Alias variables
+EEADDRESS	EQU	32
 
 ;********************************************************************************
 
@@ -39,43 +44,21 @@ BASPROGRAMSTART
 	call	INITSYS
 
 ;Start of the main program
-;''
-;''  Will not compile... ucase......
-;''
-;''  PIC: 16f15355
-;''  Compiler: GCB
-;''  IDE: GCB@SYN
-;''
-;''
-;''@author   EvanV
-;''@licence  GPL
-;''@version  1.0
-;''@date     04.12.2019
-;Chip Settings.
-;asm showdebug  This will cannot compile... as the ASM compiler UI cannot set case sensitivity
-;this will cannot compile... as the asm compiler ui cannot set case sensitivity
-;dir porta.1 out
-	bcf	TRISA,1
-;do
-SysDoLoop_S1
-;wait 1 us
+;Must use ReadTable and a variable for the index, or the table won't be
+;downloaded to EEPROM
+;TableLoc = 2
 	movlw	2
-	movwf	DELAYTEMP
-DelayUS1
-	decfsz	DELAYTEMP,F
-	goto	DelayUS1
-	nop
-;porta.1 = !porta.1
-	clrf	SysTemp1
-	btfsc	PORTA,1
-	incf	SysTemp1,F
-	comf	SysTemp1,F
-	bcf	LATA,1
-	btfsc	SysTemp1,0
-	bsf	LATA,1
-;loop
-	goto	SysDoLoop_S1
-SysDoLoop_E1
+	movwf	TABLELOC
+;ReadTable TestDataSource, TableLoc, SomeVar
+	movlw	low(TableTESTDATASOURCE)
+	addwf	TABLELOC,W
+	movwf	EEAddress
+	call	SysEPRead
+	movf	EEDataValue,W
+	movwf	SOMEVAR
+;Table of values to write to EEPROM
+;EEPROM location 0 will store length of table
+;Subsequent locations will each store a value
 BASPROGRAMEND
 	sleep
 	goto	BASPROGRAMEND
@@ -107,8 +90,8 @@ INITSYS
 	movwf	OSCFRQ
 ;Ensure all ports are set for digital I/O and, turn off A/D
 ;SET ADFM OFF
-	banksel	ADCON1
-	bcf	ADCON1,ADFM
+	banksel	ADCON0
+	bcf	ADCON0,ADFM0
 ;Switch off A/D Var(ADCON0)
 ;SET ADCON0.ADON OFF
 	bcf	ADCON0,ADON
@@ -135,8 +118,25 @@ INITSYS
 	clrf	PORTB
 ;PORTC = 0
 	clrf	PORTC
-;PORTE = 0
-	clrf	PORTE
+	return
+
+;********************************************************************************
+
+SYSEPREAD
+;Variable alias
+;Dim EEAddress Alias EEADR
+;Disable interrupt
+;IntOff
+;Select data memory
+;Set CFGS OFF
+	banksel	NVMCON1
+	bcf	NVMCON1,NVMREGS
+;Read
+;SET RD ON
+	bsf	NVMCON1,RD
+;Restore interrupt
+;IntOn
+	banksel	STATUS
 	return
 
 ;********************************************************************************
@@ -147,5 +147,19 @@ INITSYS
 	ORG	4096
 ;Start of program memory page 3
 	ORG	6144
+;Start of program memory page 4
+	ORG	8192
+;Start of program memory page 5
+	ORG	10240
+;Start of program memory page 6
+	ORG	12288
+;Start of program memory page 7
+	ORG	14336
+;********************************************************************************
+
+; Data Lookup Tables (data memory)
+	ORG	0xF000
+TableTESTDATASOURCE	equ	0
+	de	59, 84, 104, 105, 115, 32, 105, 115, 32, 97, 32, 100, 101, 109, 111, 110, 115, 116, 114, 97, 116, 105, 111, 110, 32, 111, 102, 32, 119, 114, 105, 116, 105, 110, 103, 32, 116, 111, 32, 69, 69, 80, 114, 111, 109, 32, 119, 105, 116, 104, 32, 97, 32, 115, 116, 114, 105, 110, 103, 33
 
  END
