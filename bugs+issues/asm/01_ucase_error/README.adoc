@@ -1,9 +1,0 @@
-# Error Message
-
-ASM is case sensitive as it is not possible to set the case sensitivity switch (as wqe can with MPASMX or MPLAB-X)
-
-See project https://mplabxpress.microchip.com/mplabcloud/ide/import/93e6ef9d-e7f7-4127-9a3c-73d79453e749?code=bcbc30164aa84b264bd696b2ab9778c3a66bd897
-
-
-
-image::ErrorCapture.JPG[Error Message Screen]
